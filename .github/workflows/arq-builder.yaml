@@ -2,10 +2,11 @@ name: Build samuelcolvin/arq
 
 on:
   workflow_dispatch:
-    version: 
-      default: '0.23.0'
-      description: Library Version
-      required: true
+    inputs:
+      version: 
+        default: '0.23.0'
+        description: Library Version
+        required: true
 
 jobs:
   lint:
