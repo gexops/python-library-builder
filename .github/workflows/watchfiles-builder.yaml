@@ -2,6 +2,11 @@ name: Build samuelcolvin/watchfiles
 
 on:
   workflow_dispatch:
+    inputs:
+      version: 
+        default: '0.15.1'
+        description: Library Version
+        required: true
 
 jobs:
   test-watchfiles:
@@ -193,14 +198,14 @@ jobs:
         #run:  VERSION=${{ env.VERSION }} python .github/set_version.py
         run:  python .github/set_version.py
         env:
-          VERSION: "0.15.1"
+          VERSION: ${{ github.event.inputs.version }}
         #if: "startsWith(github.ref, 'refs/tags/')"
 
       - name: Sync Cargo.lock
         #run: VERSION=${{ env.VERSION }} cargo update -p watchfiles_rust_notify
         run: cargo update -p watchfiles_rust_notify
         env:
-          VERSION: "0.15.1"
+          VERSION: ${{ github.event.inputs.version }}
         #if: "startsWith(github.ref, 'refs/tags/')"
 
       - run: pip install -U twine
