@@ -3,6 +3,14 @@ name: Build samuelcolvin/arq
 on:
   workflow_dispatch:
     inputs:
+      repo:
+        default: samuelcolvin/arq
+        description: Github repo
+        required: true
+      branch:
+        default: master
+        description: Github branch
+        required: true
       version: 
         default: '0.23.0'
         description: Library Version
@@ -15,8 +23,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: 'samuelcolvin/arq'
-        ref: 'master'
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.branch }}
 
     - name: set up python
       uses: actions/setup-python@v1
@@ -73,8 +81,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: 'samuelcolvin/arq'
-        ref: 'master'
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.branch }}
 
     - name: set up python
       uses: actions/setup-python@v1
@@ -104,8 +112,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'samuelcolvin/arq'
-          ref: 'master'
+          repository: ${{ github.event.inputs.repo }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: set up python
         uses: actions/setup-python@v1

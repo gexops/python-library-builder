@@ -3,6 +3,14 @@ name: Build samuelcolvin/watchfiles
 on:
   workflow_dispatch:
     inputs:
+      repo:
+        default: samuelcolvin/watchfiles
+        description: Github repo
+        required: true
+      branch:
+        default: main
+        description: Github branch
+        required: true
       version: 
         default: '0.15.1'
         description: Library Version
@@ -34,8 +42,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: 'samuelcolvin/watchfiles'
-        ref: 'main'
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.branch }}
 
     - name: set up python
       uses: actions/setup-python@v3
@@ -85,8 +93,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: 'samuelcolvin/watchfiles'
-        ref: 'main'
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.branch }}
 
     - uses: actions/setup-python@v3
       with:
@@ -233,8 +241,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'samuelcolvin/watchfiles'
-          ref: 'main'
+          repository: ${{ github.event.inputs.repo }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: get dist artifacts
         uses: actions/download-artifact@v3
@@ -254,8 +262,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'samuelcolvin/watchfiles'
-          ref: 'main'
+          repository: ${{ github.event.inputs.repo }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: set up python
         uses: actions/setup-python@v3
