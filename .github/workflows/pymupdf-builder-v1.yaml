@@ -74,7 +74,7 @@ jobs:
             # On Linux, tell cibuildwheel to build native archs ('auto'), and
             # aarch64.
             #
-            CIBW_ARCHS_LINUX: auto aarch64 armv7
+            CIBW_ARCHS_LINUX: auto aarch64
             # For testing, build for single python version.
             #CIBW_BUILD: "cp39*"
             # Get cibuildwheel to run pytest with each wheel.
