@@ -61,21 +61,40 @@ jobs:
 
       - run: pip install -U twine
 
-      - name: build wheels
-        uses: messense/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          manylinux: ${{ matrix.manylinux || 'auto' }}
-          args: --release --out dist
+      # - name: build wheels
+      #   uses: messense/maturin-action@v1
+      #   with:
+      #     target: ${{ matrix.target }}
+      #     manylinux: ${{ matrix.manylinux || 'auto' }}
+      #     args: --release --out dist
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.6.1
+        # Set extra cibuildwheel options using environmental variables.
+        #
+        env:
+            # These exclusions are copied from PyMuPDF-1.19.
+            CIBW_SKIP: "pp* *i686 *-musllinux_* cp36*"
+            # On Linux, tell cibuildwheel to build native archs ('auto'), and
+            # aarch64.
+            #
+            CIBW_ARCHS_LINUX: auto aarch64
+            # For testing, build for single python version.
+            #CIBW_BUILD: "cp39*"
+            # Get cibuildwheel to run pytest with each wheel.
+            # Setting verbosity here sometimes seems to result in SEGV's when
+            # running pytest.
+            CIBW_TEST_REQUIRES: "fontTools pytest"
+            CIBW_TEST_COMMAND: "pytest -s {project}/tests || true"
+            CIBW_BUILD_VERBOSITY: 3
 
-      - run: ${{ matrix.ls || 'ls -lh' }} dist/
+      - run: ${{ matrix.ls || 'ls -lh' }} wheelhouse/
 
-      - run: twine check dist/*
+      - run: twine check wheelhouse/*
 
       - uses: actions/upload-artifact@v3
         with:
           name: pypi_files
-          path: dist
+          path: wheelhouse
 
   list-pypi-files:
     needs: [build-pymupdf]
@@ -90,9 +109,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: pypi_files
-          path: dist
+          path: wheelhouse
 
-      - run: ls -lh dist/
+      - run: ls -lh wheelhouse/
 
   release:
     needs: ['build-pymupdf']
@@ -116,12 +135,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: pypi_files
-          path: dist
+          path: wheelhouse
 
-      - run: twine check dist/*
+      - run: twine check wheelhouse/*
 
       - name: upload to pypi
-        run: twine upload dist/*
+        run: twine upload wheelhouse/*
         env:
           TWINE_REPOSITORY_URL: ${{ secrets.pypi_repository }}
           TWINE_USERNAME: ${{ secrets.pypi_username }}
