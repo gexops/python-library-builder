@@ -193,8 +193,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'samuelcolvin/watchfiles'
-          ref: 'main'
+          repository: ${{ github.event.inputs.repo }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: set up python
         uses: actions/setup-python@v3
