@@ -78,7 +78,7 @@ jobs:
         # Set extra cibuildwheel options using environmental variables.
         env:
             # These exclusions are copied from PyMuPDF-1.19.
-            #CIBW_SKIP: "pp* *i686 *-musllinux_* cp36*"
+            CIBW_SKIP: "pp* *i686 *-musllinux_* cp36*"
             # On Linux, tell cibuildwheel to build native archs ('auto'), and
             # aarch64.
             CIBW_ARCHS_LINUX: auto aarch64
