@@ -30,11 +30,11 @@ jobs:
     
     - run: pip install -U twine
     - name: upload to pypi
-        run: twine upload dist/*
-        env:
-          TWINE_REPOSITORY_URL: ${{ secrets.pypi_repository }}
-          TWINE_USERNAME: ${{ secrets.pypi_username }}
-          TWINE_PASSWORD: ${{ secrets.pypi_password }}
+      run: twine upload dist/*
+      env:
+        TWINE_REPOSITORY_URL: ${{ secrets.pypi_repository }}
+        TWINE_USERNAME: ${{ secrets.pypi_username }}
+        TWINE_PASSWORD: ${{ secrets.pypi_password }}
 
     #- uses: actions/upload-artifact@v2
     #  with:
