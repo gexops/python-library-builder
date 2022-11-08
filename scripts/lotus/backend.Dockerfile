@@ -27,7 +27,8 @@ FROM build AS production
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
 
-COPY ../../../scripts/lotus/backend_bootstrap.sh /bootstrap.sh
+COPY ./scripts/bootstrap.sh /bootstrap.sh
+# COPY ../../../scripts/lotus/backend_bootstrap.sh /bootstrap.sh
 RUN chmod +x /bootstrap.sh
 
 # ---------------------------------------
