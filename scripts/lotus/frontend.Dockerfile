@@ -34,4 +34,5 @@ RUN chmod +x /bootstrap.sh
 # ---------------------------------------
 
 EXPOSE 80
+CMD [ "/bin/bash", "-c" ]
 ENTRYPOINT [ "/bootstrap.sh" ]

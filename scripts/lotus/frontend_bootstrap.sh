@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script is used to bootstrap the nginx configuration for the lotus node.
 
@@ -14,7 +14,7 @@ function create_nginx_config(){
     echo " - Copying: $CUSTOM_NGINX_CONFIG_FILE -> $NGINX_CONFIG_FILE"
     echo " - Nginx Timeout: $NGINX_TIMEOUT"
     cat $CUSTOM_NGINX_CONFIG_FILE | sed "s|BACKEND_API_PORT|${BACKEND_API_PORT}|g" | sed "s|BACKEND_API_HOST|${BACKEND_API_HOST}|g" | sed "s|FRONTEND_PORT|${FRONTEND_PORT}|g" | cat > $NGINX_CONFIG_FILE
-    if [ -f "/etc/nginx/sites-enabled/default" ]; then
+    if [[ -f "/etc/nginx/sites-enabled/default" ]]; then
         rm /etc/nginx/sites-enabled/default
     fi
 }
