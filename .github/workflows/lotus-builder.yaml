@@ -40,7 +40,7 @@ jobs:
         cp ./scripts/lotus/backend_bootstrap.sh ./lotus/backend/scripts/bootstrap.sh
 
         cp ./scripts/lotus/frontend.Dockerfile ./lotus/frontend/Dockerfile
-        cp ./scripts/lotus/frontend_bootstrap.sh ./lotus/frontend/bootstrap.sh
+        cp ./scripts/lotus/frontend_bootstrap.sh ./lotus/frontend/frontend_bootstrap.sh
         cp ./scripts/lotus/nginx.conf ./lotus/frontend/custom_nginx.conf
 
 

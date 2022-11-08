@@ -26,7 +26,7 @@ COPY --from=build /frontend/src/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY custom_nginx.conf /frontend/nginx.conf
-COPY ./bootstrap.sh /frontend_bootstrap.sh
+COPY ./frontend_bootstrap.sh /
 RUN chmod +x /frontend_bootstrap.sh
 
 # ---------------------------------------
@@ -34,6 +34,6 @@ RUN chmod +x /frontend_bootstrap.sh
 # ---------------------------------------
 
 EXPOSE 80
-ENTRYPOINT [ "/frontend_bootstrap.sh" ]
+# ENTRYPOINT [ "/frontend_bootstrap.sh" ]
 
-CMD [ "/bin/bash", "-c" ]
+CMD [ "/bin/bash", "-c", "/frontend_bootstrap.sh" ]
