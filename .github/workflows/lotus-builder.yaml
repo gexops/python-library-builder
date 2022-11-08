@@ -1,0 +1,69 @@
+name: Build uselotus/lotus
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        default: uselotus/lotus
+        description: Github repo
+        required: true
+      branch:
+        default: main
+        description: Github branch
+        required: true
+
+env:
+  DOCKER_REGISTRY: growthengineai
+  DOCKER_REPO: lotus
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Setup Docker Actions
+      uses: gexops/actions@main
+      id: actions
+      with:
+        username: ${{ secrets.docker_username }}
+        password: ${{ secrets.docker_password }}
+        semantic_version_enabled: 'true'
+    - name: Checkout Working Repo
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ github.event.inputs.repo }}
+        ref: ${{ github.event.inputs.branch }}
+        path: lotus
+    - name: Patch Build Files
+      run: |
+        cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
+        cp ./scripts/lotus/frontend.Dockerfile ./lotus/frontend/Dockerfile
+
+    - name: Build and Push Docker Image - Lotus Backend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./lotus/backend
+        file: Dockerfile
+        target: production
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:backend
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:backend-${{ steps.actions.outputs.semantic_version_tag }}
+        cache-from: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:backend,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }}
+        cache-to: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:backend,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }},mode=max
+
+    - name: Build and Push Docker Image - Lotus Frontend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./lotus/frontend
+        file: Dockerfile
+        target: production
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:frontend
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:frontend-${{ steps.actions.outputs.semantic_version_tag }}
+        cache-from: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:frontend,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }}
+        cache-to: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:frontend,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }},mode=max
+
