@@ -12,7 +12,7 @@ FRONTEND_PORT=${FRONTEND_PORT:-80}
 
 function create_nginx_config(){
     echo " - Copying: $CUSTOM_NGINX_CONFIG_FILE -> $NGINX_CONFIG_FILE"
-    echo " - Nginx Timeout: $NGINX_TIMEOUT"
+    # echo " - Nginx Timeout: $NGINX_TIMEOUT"
     cat $CUSTOM_NGINX_CONFIG_FILE | sed "s|BACKEND_API_PORT|${BACKEND_API_PORT}|g" | sed "s|BACKEND_API_HOST|${BACKEND_API_HOST}|g" | sed "s|FRONTEND_PORT|${FRONTEND_PORT}|g" | cat > $NGINX_CONFIG_FILE
     if [ -f "/etc/nginx/sites-enabled/default" ]; then
         rm /etc/nginx/sites-enabled/default
@@ -22,4 +22,4 @@ function create_nginx_config(){
 create_nginx_config
 
 # run nginx
-nginx -g daemon off;
+# nginx -g daemon off;

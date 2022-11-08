@@ -26,14 +26,17 @@ COPY --from=build /frontend/src/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY custom_nginx.conf /frontend/nginx.conf
-COPY ./frontend_bootstrap.sh /
-RUN chmod +x /frontend_bootstrap.sh
+COPY ./bootstrap.sh /docker-entrypoint.d/40-nginx-bootstrap.sh
+RUN chmod +x /docker-entrypoint.d/40-nginx-bootstrap.sh
 
 # ---------------------------------------
 # Run
 # ---------------------------------------
 
 EXPOSE 80
-ENTRYPOINT [ "/frontend_bootstrap.sh" ]
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+# ENTRYPOINT [ "/frontend_bootstrap.sh" ]
+CMD ["nginx", "-g", "daemon off;"]
 
 # CMD [ "/bin/bash", "-c", "/frontend_bootstrap.sh" ]
