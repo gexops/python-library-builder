@@ -38,6 +38,10 @@ jobs:
       run: |
         cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
         cp ./scripts/lotus/frontend.Dockerfile ./lotus/frontend/Dockerfile
+        ls -a .
+        ls -a ./lotus
+        ls -a ./lotus/backend
+        ls -a ./lotus/frontend
 
     - name: Build and Push Docker Image - Lotus Backend
       uses: docker/build-push-action@v3
