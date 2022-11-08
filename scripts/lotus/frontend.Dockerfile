@@ -34,6 +34,6 @@ RUN chmod +x /frontend_bootstrap.sh
 # ---------------------------------------
 
 EXPOSE 80
-# ENTRYPOINT [ "/frontend_bootstrap.sh" ]
+ENTRYPOINT [ "/frontend_bootstrap.sh" ]
 
-CMD [ "/bin/bash", "-c", "/frontend_bootstrap.sh" ]
+# CMD [ "/bin/bash", "-c", "/frontend_bootstrap.sh" ]
