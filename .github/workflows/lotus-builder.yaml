@@ -47,7 +47,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: ./lotus/frontend
-        file: Dockerfile
+        file: ./lotus/frontend/Dockerfile
         target: production
         platforms: linux/amd64
         push: true
@@ -62,7 +62,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: ./lotus/backend
-        file: Dockerfile
+        file: ./lotus/backend/Dockerfile
         target: production
         platforms: linux/amd64
         push: true
