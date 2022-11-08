@@ -25,8 +25,8 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /frontend/src/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY ../../scripts/lotus/nginx.conf /frontend/nginx.conf
-COPY ../../scripts/lotus/frontend_bootstrap.sh /bootstrap.sh
+COPY ../../../scripts/lotus/nginx.conf /frontend/nginx.conf
+COPY ../../../scripts/lotus/frontend_bootstrap.sh /bootstrap.sh
 RUN chmod +x /bootstrap.sh
 
 # ---------------------------------------
