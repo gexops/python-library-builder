@@ -10,6 +10,10 @@ WORKDIR /lotus
 COPY Pipfile Pipfile.lock ./
 RUN pip install -U --no-cache-dir --disable-pip-version-check pipenv
 RUN pipenv install --system --deploy --ignore-pipfile --dev
+
+# COPY ./extra_requirements.txt /tmp/requirements.txt
+# RUN pip install -r /tmp/requirements.txt
+
 # copy python files,
 COPY ./lotus/ ./lotus/
 COPY ./metering_billing/ ./metering_billing/
@@ -25,6 +29,7 @@ RUN chmod +x ./scripts/start_backend.dev.sh
 # Production
 # ---------------------------------------
 FROM build AS production 
+
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
 

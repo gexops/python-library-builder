@@ -140,7 +140,16 @@ ANYMAIL = {
     "MAILGUN_SMTP_SERVER": os.environ.get("MAILGUN_SMTP_SERVER"),
 }
 
-if DEBUG:
+
+EMAIL_USE_SENDGRID = config("EMAIL_USE_SENDGRID", default=False, cast=bool)
+SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="")
+
+if EMAIL_USE_SENDGRID and SENDGRID_API_KEY != "":
+    EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+    APP_URL = "http://localhost"
+    ANYMAIL['SENDGRID_API_KEY'] = SENDGRID_API_KEY
+    
+elif DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     APP_URL = "http://localhost:8000"
 elif SELF_HOSTED:
@@ -164,7 +173,6 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=True, cast=bool)
 EMAIL_FROM = f"{EMAIL_USERNAME}@{EMAIL_DOMAIN}"
 EMAIL_SUBJECT_PREFIX = config('EMAIL_SUBJECT_PREFIX', "[Lotus] ")
-
 
 DEFAULT_FROM_EMAIL = f"{EMAIL_USERNAME}@{EMAIL_DOMAIN}"
 SERVER_EMAIL = f"you@{EMAIL_DOMAIN}"  # ditto (default from-email for Django errors)
