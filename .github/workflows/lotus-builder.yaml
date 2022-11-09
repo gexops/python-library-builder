@@ -1,6 +1,10 @@
 name: Build uselotus/lotus
 
 on:
+  push:
+    paths:
+      - '.github/workflows/lotus-builder.yaml'
+      - 'scripts/lotus/**'
   workflow_dispatch:
     inputs:
       repo:
@@ -38,13 +42,16 @@ jobs:
       run: |
         cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
         cp ./scripts/lotus/backend_bootstrap.sh ./lotus/backend/scripts/bootstrap.sh
+        cp ./scripts/lotus/backend_settings.py ./lotus/backend/lotus/settings.py
+
 
         cp ./scripts/lotus/frontend.Dockerfile ./lotus/frontend/Dockerfile
         cp ./scripts/lotus/frontend_bootstrap.sh ./lotus/frontend/bootstrap.sh
         cp ./scripts/lotus/nginx.conf ./lotus/frontend/custom_nginx.conf
-    - name: Patch Settings File
-      run: |
-        bash ./scripts/lotus/rewrite_settings.sh ./lotus/backend/lotus/settings.py
+ 
+    # - name: Patch Settings File
+    #   run: |
+    #     bash ./scripts/lotus/rewrite_settings.sh ./lotus/backend/lotus/settings.py
 
     - name: Build and Push Docker Image - Lotus Frontend
       uses: docker/build-push-action@v3
