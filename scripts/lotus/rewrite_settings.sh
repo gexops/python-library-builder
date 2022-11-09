@@ -15,3 +15,5 @@ EOF
 
 
 python /tmp/pyscript.py
+
+echo "$(cat $INPUT_SETTINGS_FILE)"
