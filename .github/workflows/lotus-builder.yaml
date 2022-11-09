@@ -32,12 +32,23 @@ jobs:
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_password }}
         semantic_version_enabled: 'true'
+    
     - name: Checkout Working Repo
       uses: actions/checkout@v2
+      if: ${{ github.event.inputs }}
       with:
         repository: ${{ github.event.inputs.repo }}
         ref: ${{ github.event.inputs.branch }}
         path: lotus
+    
+    - name: Checkout Working Repo
+      uses: actions/checkout@v2
+      if: ${{ ! github.event.inputs }}
+      with:
+        repository: uselotus/lotus
+        ref: main
+        path: lotus
+
     - name: Patch Build Files
       run: |
         cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
