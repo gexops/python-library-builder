@@ -154,8 +154,18 @@ APP_URL = config("APP_URL", default=APP_URL)
 APP_DOMAIN = config("APP_DOMAIN", default=APP_URL.split('://', 1)[-1])
 APP_SCHEME = config("APP_SCHEME", default=APP_URL.split('://', 1)[0])
 
-EMAIL_DOMAIN = os.environ.get("MAILGUN_DOMAIN")
+EMAIL_DOMAIN = os.getenv('EMAIL_DOMAIN', os.getenv("MAILGUN_DOMAIN"))
 EMAIL_USERNAME = "noreply"
+EMAIL_HOST = os.getenv("EMAIL_HOST", os.getenv('MAILGUN_HOST'))
+EMAIL_PORT = config('EMAIL_PORT', default=465, cast=int)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", os.getenv('MAILGUN_SMTP_LOGIN'))
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", os.getenv('MAILGUN_SMTP_PASSWORD'))
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=True, cast=bool)
+EMAIL_FROM = f"{EMAIL_USERNAME}@{EMAIL_DOMAIN}"
+EMAIL_SUBJECT_PREFIX = config('EMAIL_SUBJECT_PREFIX', "[Lotus] ")
+
+
 DEFAULT_FROM_EMAIL = f"{EMAIL_USERNAME}@{EMAIL_DOMAIN}"
 SERVER_EMAIL = f"you@{EMAIL_DOMAIN}"  # ditto (default from-email for Django errors)
 
