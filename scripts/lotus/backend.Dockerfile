@@ -31,7 +31,10 @@ RUN chmod +x ./scripts/start_backend.dev.sh
 FROM build AS production 
 
 # Update libpq
-RUN apt-get update && apt-get install -y postgresql-14 libpq-dev
+RUN apt-get update && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    apt-get install -y postgresql-14 libpq-dev
 
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
