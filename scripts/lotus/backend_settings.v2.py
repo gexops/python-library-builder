@@ -265,11 +265,13 @@ if os.environ.get("DATABASE_URL"):
             conn_max_age=600,
         )
     }
-    django_heroku.settings(locals(), databases=False)
+    # django_heroku.settings(locals(), databases=False)
+    print(f'Using DATABASE_URL: {os.environ["DATABASE_URL"]}')
 elif POSTGRES_HOST:
     pg_options = {'sslmode': POSTGRES_SSL_MODE}
     if POSTGRES_OPTIONS:
         pg_options.update(dict([x.split('=') for x in POSTGRES_OPTIONS.split(',')]))
+    print(f'Using POSTGRES_HOST: {POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB} {pg_options}')
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -282,6 +284,7 @@ elif POSTGRES_HOST:
         }
     }
 else:
+    print('Using Default DB')
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
