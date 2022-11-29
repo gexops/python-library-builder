@@ -31,7 +31,7 @@ RUN chmod +x ./scripts/start_backend.dev.sh
 FROM build AS production 
 
 # Update libpq
-RUN apt-get update && apt-get install -y libpq-dev
+RUN apt-get update && apt-get install -y postgresql-14 libpq-dev
 
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
