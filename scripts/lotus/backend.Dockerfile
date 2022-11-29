@@ -30,6 +30,9 @@ RUN chmod +x ./scripts/start_backend.dev.sh
 # ---------------------------------------
 FROM build AS production 
 
+# Update libpq
+RUN apt-get update && apt-get install -y libpq-dev
+
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
 

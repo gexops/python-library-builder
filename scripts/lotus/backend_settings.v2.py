@@ -270,7 +270,7 @@ if os.environ.get("DATABASE_URL"):
 elif POSTGRES_HOST:
     pg_options = {'sslmode': POSTGRES_SSL_MODE}
     if POSTGRES_OPTIONS:
-        pg_options.update(dict([x.split('=') for x in POSTGRES_OPTIONS.split(',')]))
+        pg_options.update(dict([x.split('=', 1) for x in POSTGRES_OPTIONS.split(',')]))
     print(f'Using POSTGRES_HOST: {POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB} {pg_options}')
     DATABASES = {
         "default": {
