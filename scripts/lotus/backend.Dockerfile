@@ -11,8 +11,9 @@ COPY Pipfile Pipfile.lock ./
 RUN pip install -U --no-cache-dir --disable-pip-version-check pipenv
 RUN pipenv install --system --deploy --ignore-pipfile --dev
 
-# COPY ./extra_requirements.txt /tmp/requirements.txt
-# RUN pip install -r /tmp/requirements.txt
+# Add additional libs
+COPY ./extra_requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 # copy python files,
 COPY ./lotus/ ./lotus/
@@ -46,7 +47,6 @@ COPY ./scripts/start_consumer.sh ./scripts/start_consumer.sh
 RUN chmod +x ./scripts/start_consumer.sh
 
 COPY ./scripts/bootstrap.sh /bootstrap.sh
-# COPY ../../../scripts/lotus/backend_bootstrap.sh /bootstrap.sh
 RUN chmod +x /bootstrap.sh
 
 # ---------------------------------------

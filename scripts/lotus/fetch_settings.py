@@ -6,10 +6,14 @@ import pathlib
 here = pathlib.Path(__file__).parent.absolute()
 
 settings_file = here.joinpath('backend_settings.v2.py')
+urls_file = here.joinpath('backend_urls.v2.py')
 
 settings_url = 'https://github.com/uselotus/lotus/raw/main/backend/lotus/settings.py'
+lotus_url_url = 'https://github.com/uselotus/lotus/raw/main/backend/lotus/urls.py'
 
 os.system(f"wget -O {settings_file.as_posix()} {settings_url}")
+os.system(f"wget -O {urls_file.as_posix()} {lotus_url_url}")
+
 
 settings_text = ""
 
@@ -84,6 +88,7 @@ else:
 APP_URL = config("APP_URL", default=APP_URL)
 APP_DOMAIN = config("APP_DOMAIN", default=APP_URL.split('://', 1)[-1])
 APP_SCHEME = config("APP_SCHEME", default=APP_URL.split('://', 1)[0])
+OPENAPI_SCHEMA_ENABLED = config("OPENAPI_SCHEMA_ENABLED", default=False, cast=bool)
 
 EMAIL_DOMAIN = os.getenv('EMAIL_DOMAIN', os.getenv("MAILGUN_DOMAIN"))
 EMAIL_USERNAME = "noreply"
@@ -222,6 +227,15 @@ elif DOCKERIZED:
             skip_until = 'VITE_APP_DIR = BASE_DIR / "src"'
             continue
     
+        # Patch SPECTACULAR_SETTINGS
+        if '"SERVE_INCLUDE_SCHEMA": False,' in line:
+            settings_text += """
+    "SERVE_INCLUDE_SCHEMA": OPENAPI_SCHEMA_ENABLED,
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+"""
+            continue
+
         # Patch CORS
 
         if line.startswith('DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"'):
@@ -255,3 +269,31 @@ settings_text.replace('phc_6HB6j1Hp68ESe2FpvodVwF48oisXYpot5Ymc06SbY9M', 'phc_cw
 
 settings_file.write_text(settings_text)
 print('Patched settings.py')
+
+
+## Handle Urls File
+urls_text = urls_file.read_text()
+
+urls_text += """
+
+if settings.OPENAPI_SCHEMA_ENABLED:
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+    urlpatterns += [
+        path(
+            "api/schema", 
+            include(
+                [
+                    path('', SpectacularAPIView.as_view(), name='schema'),
+                    # Optional UI:
+                    path('swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+                ]
+            )
+        )
+    ]
+
+
+"""
+
+urls_file.write_text(urls_text)
+print('Patched urls.py')

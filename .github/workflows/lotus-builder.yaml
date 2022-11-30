@@ -55,8 +55,9 @@ jobs:
         cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
         cp ./scripts/lotus/backend_bootstrap.sh ./lotus/backend/scripts/bootstrap.sh
         cp ./scripts/lotus/backend_settings.v2.py ./lotus/backend/lotus/settings.py
+        cp ./scripts/lotus/backend_urls.v2.py ./lotus/backend/lotus/urls.py
+        
         cp ./scripts/lotus/backend_requirements.txt ./lotus/backend/extra_requirements.txt
-
 
         cp ./scripts/lotus/frontend.Dockerfile ./lotus/frontend/Dockerfile
         cp ./scripts/lotus/frontend_bootstrap.sh ./lotus/frontend/bootstrap.sh

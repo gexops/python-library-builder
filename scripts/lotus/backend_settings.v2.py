@@ -184,6 +184,7 @@ else:
 APP_URL = config("APP_URL", default=APP_URL)
 APP_DOMAIN = config("APP_DOMAIN", default=APP_URL.split('://', 1)[-1])
 APP_SCHEME = config("APP_SCHEME", default=APP_URL.split('://', 1)[0])
+OPENAPI_SCHEMA_ENABLED = config("OPENAPI_SCHEMA_ENABLED", default=False, cast=bool)
 
 EMAIL_DOMAIN = os.getenv('EMAIL_DOMAIN', os.getenv("MAILGUN_DOMAIN"))
 EMAIL_USERNAME = "noreply"
@@ -234,11 +235,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
-            "libraries": {
-                "render_vite_bundle": (
-                    "metering_billing.template_tags.render_vite_bundle"
-                ),
-            },
         },
     },
 ]
@@ -336,7 +332,7 @@ def key_deserializer(key):
 # Kafka/Redpanda Settings
 KAFKA_PREFIX = config("KAFKA_PREFIX", default="")
 KAFKA_EVENTS_TOPIC = KAFKA_PREFIX + config("EVENTS_TOPIC", default="test-topic")
-if type(KAFKA_EVENTS_TOPIC) == bytes:
+if type(KAFKA_EVENTS_TOPIC) is bytes:
     KAFKA_EVENTS_TOPIC = KAFKA_EVENTS_TOPIC.decode("utf-8")
 KAFKA_NUM_PARTITIONS = config("NUM_PARTITIONS", default=10, cast=int)
 KAFKA_REPLICATION_FACTOR = config("REPLICATION_FACTOR", default=1, cast=int)
@@ -539,7 +535,10 @@ SPECTACULAR_SETTINGS = {
         " automate and optimize their custom usage-based pricing for any metric."
     ),
     "VERSION": "0.0.1",
-    "SERVE_INCLUDE_SCHEMA": False,
+
+    "SERVE_INCLUDE_SCHEMA": OPENAPI_SCHEMA_ENABLED,
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "APPEND_COMPONENTS": {
         "securitySchemes": {
             "OrganizationApiKeyAuth": {

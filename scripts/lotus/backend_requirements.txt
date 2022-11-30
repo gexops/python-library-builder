@@ -1,1 +1,2 @@
-django-sendgrid-v5
+# django-sendgrid-v5
+drf-spectacular[sidecar]
