@@ -233,6 +233,12 @@ elif DOCKERIZED:
     "SERVE_INCLUDE_SCHEMA": OPENAPI_SCHEMA_ENABLED,
     "SWAGGER_UI_DIST": "SIDECAR",
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
 """
             continue
 
@@ -262,6 +268,16 @@ CSRF_TRUSTED_ORIGINS = ["https://*.uselotus.io", f"{APP_SCHEME}://*.{APP_DOMAIN}
 
         settings_text += line
 
+## Add additional
+
+settings_text += """
+if OPENAPI_SCHEMA_ENABLED:
+    INSTALLED_APPS += [
+        "drf_spectacular_sidecar"
+    ]
+
+"""
+
 # settings_text = settings_file.read_text()
 
 
@@ -277,21 +293,12 @@ urls_text = urls_file.read_text()
 urls_text += """
 
 if settings.OPENAPI_SCHEMA_ENABLED:
-    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
     urlpatterns += [
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-        path("api/docs/", SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-        # path(
-        #     "api/schema/", 
-        #     include(
-        #         [
-        #             path('', SpectacularAPIView.as_view(), name='schema'),
-        #             # Optional UI:
-        #             path('swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-        #         ]
-        #     )
-        # )
+        path('api/schema/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
+        path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     ]
 
 
