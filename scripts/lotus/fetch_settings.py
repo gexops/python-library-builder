@@ -280,8 +280,10 @@ if settings.OPENAPI_SCHEMA_ENABLED:
     from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
     urlpatterns += [
+        # path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        # path("api/swagger-ui/", SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
         path(
-            "api/schema", 
+            "api/schema/", 
             include(
                 [
                     path('', SpectacularAPIView.as_view(), name='schema'),
@@ -294,6 +296,8 @@ if settings.OPENAPI_SCHEMA_ENABLED:
 
 
 """
+
+
 
 urls_file.write_text(urls_text)
 print('Patched urls.py')
