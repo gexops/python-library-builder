@@ -1,0 +1,38 @@
+name: Build neondatabase/neon - compute
+
+on:
+  push:
+    paths:
+      - '.github/workflows/neon-builder.yaml'
+      - 'scripts/neon/**'
+  workflow_dispatch:
+
+env:
+  DOCKER_REGISTRY: growthengineai
+  DOCKER_REPO: neon
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Setup Docker Actions
+      uses: gexops/actions@main
+      id: actions
+      with:
+        username: ${{ secrets.docker_username }}
+        password: ${{ secrets.docker_password }}
+        # semantic_version_enabled: 'true'
+
+    - name: Build and Push Docker Image - Neon Compute
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: ./scripts/neon/compute.Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:latest
+        cache-from: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:latest,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }}
+        cache-to: type=s3,region=${{ secrets.aws_region }},bucket=${{ secrets.aws_docker_cache_bucket }},name=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO }}:latest,access_key_id=${{ secrets.aws_access_key_id }},secret_access_key=${{ secrets.aws_secret_access_key }},mode=max
+

@@ -537,8 +537,17 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "0.0.1",
 
     "SERVE_INCLUDE_SCHEMA": OPENAPI_SCHEMA_ENABLED,
-    "SWAGGER_UI_DIST": "SIDECAR",
-    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    # "SWAGGER_UI_DIST": "SIDECAR",
+    # "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    # "REDOC_DIST": "SIDECAR",
+    'SWAGGER_UI_DIST': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest',
+    'SWAGGER_UI_FAVICON_HREF': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/favicon-32x32.png',
+    'REDOC_DIST': 'https://cdn.jsdelivr.net/npm/redoc@latest',
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
     "APPEND_COMPONENTS": {
         "securitySchemes": {
             "OrganizationApiKeyAuth": {
@@ -645,3 +654,9 @@ if SVIX_API_KEY != "":
                 name="invoice.created",
             )
         )
+
+if OPENAPI_SCHEMA_ENABLED:
+    INSTALLED_APPS += [
+        "drf_spectacular_sidecar"
+    ]
+
