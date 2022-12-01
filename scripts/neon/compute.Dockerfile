@@ -13,11 +13,12 @@ RUN apt-get update &&       \
                        jq   \
                        netcat
 
-USER postgres
 
 COPY ./scripts/neon/bootstrap.sh /shell/compute.sh
-COPY ./scripts/neon/k8_spec.json /var/db/postgres/specs/spec.json
-
 RUN chmod +x /shell/compute.sh
+
+USER postgres
+
+COPY ./scripts/neon/k8_spec.json /var/db/postgres/specs/spec.json
 
 ENTRYPOINT [ "/shell/compute.sh" ]
