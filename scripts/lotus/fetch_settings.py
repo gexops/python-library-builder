@@ -269,7 +269,43 @@ CSRF_TRUSTED_ORIGINS = ["https://*.uselotus.io", f"{APP_SCHEME}://*.{APP_DOMAIN}
 """
             continue
 
+        # Patch Svix
+        if line.startswith('if SVIX_API_KEY !='):
+            settings_text += """
+
+SVIX_SERVER_URL = config("SVIX_SERVER_URL", default="")
+if SVIX_API_KEY != "":
+    svix = Svix(SVIX_API_KEY)
+elif SVIX_API_KEY == "" and SVIX_JWT_SECRET != "":
+    try:
+        dt = datetime.datetime.now(timezone.utc)
+        utc_time = dt.replace(tzinfo=timezone.utc)
+        utc_timestamp = utc_time.timestamp()
+        payload = {
+            "iat": utc_timestamp,
+            "exp": 2980500639,
+            "nbf": utc_timestamp,
+            "iss": "svix-server",
+            "sub": "org_23rb8YdGqMT0qIzpgGwdXfHirMu",
+        }
+        encoded = jwt.encode(payload, SVIX_JWT_SECRET, algorithm="HS256")
+        SVIX_API_KEY = encoded
+        if not SVIX_SERVER_URL:
+            hostname, _, ips = socket.gethostbyname_ex("svix-server")
+            SVIX_SERVER_URL = f"http://{ips[0]}:8071"
+        svix = Svix(SVIX_API_KEY, SvixOptions(server_url = SVIX_SERVER_URL))
+    except Exception as e:
+        svix = None
+else:
+    svix = None
+"""
+            skip_until = "SVIX_CONNECTOR = svix"
+            continue
+        
+        ## Done with all patches
         settings_text += line
+
+
 
 ## Add additional
 
@@ -281,9 +317,8 @@ if OPENAPI_SCHEMA_ENABLED:
 
 """
 
+
 # settings_text = settings_file.read_text()
-
-
 settings_text.replace('phc_6HB6j1Hp68ESe2FpvodVwF48oisXYpot5Ymc06SbY9M', 'phc_cwylLiJu07xp9imixZ7edaiLjJYS1D1NNhe3wg4Xms0')
 
 settings_file.write_text(settings_text)
