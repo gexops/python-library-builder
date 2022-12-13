@@ -11,9 +11,17 @@ urls_file = here.joinpath('backend_urls.v2.py')
 settings_url = 'https://github.com/uselotus/lotus/raw/main/backend/lotus/settings.py'
 lotus_url_url = 'https://github.com/uselotus/lotus/raw/main/backend/lotus/urls.py'
 
+backend_start_script_file = here.joinpath('start_backend.prod.v1.sh')
+backend_start_consumer_script_file = here.joinpath('start_consumer.v1.sh')
+
+lotus_backend_start_script = 'https://github.com/uselotus/lotus/raw/main/backend/scripts/start_backend.prod.sh'
+lotus_backend_start_consumer_script = 'https://github.com/uselotus/lotus/raw/main/backend/scripts/start_consumer.sh'
+
 os.system(f"wget -O {settings_file.as_posix()} {settings_url}")
 os.system(f"wget -O {urls_file.as_posix()} {lotus_url_url}")
 
+os.system(f"wget -O {backend_start_script_file.as_posix()} {lotus_backend_start_script}")
+os.system(f"wget -O {backend_start_consumer_script_file.as_posix()} {lotus_backend_start_consumer_script}")
 
 settings_text = ""
 
@@ -346,3 +354,25 @@ if settings.OPENAPI_SCHEMA_ENABLED:
 
 urls_file.write_text(urls_text)
 print('Patched urls.py')
+
+# Patch Scripts
+backend_start_script = backend_start_script_file.read_text()
+
+# Patch Postgres
+backend_start_script = backend_start_script.replace('db ', '${POSTGRES_HOST:-db} ', 1)
+backend_start_script = backend_start_script.replace('5432 ', '${POSTGRES_PORT:-5432} ', 1)
+
+# Patch Svix
+backend_start_script = backend_start_script.replace('svix-server ', '${SVIX_SERVER_HOST:-svix-server} ', 1)
+backend_start_script = backend_start_script.replace('8071 ', '${SVIX_SERVER_PORT:-8071} ', 1)
+
+
+backend_start_script_file.write_text(backend_start_script)
+
+# Patch Postgres
+backend_start_consumer_script = backend_start_consumer_script_file.read_text()
+
+backend_start_consumer_script = backend_start_consumer_script.replace('db ', '${POSTGRES_HOST:-db} ', 1)
+backend_start_consumer_script = backend_start_consumer_script.replace('5432 ', '${POSTGRES_PORT:-5432} ', 1)
+
+backend_start_consumer_script_file.write_text(backend_start_consumer_script)

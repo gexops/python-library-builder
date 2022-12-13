@@ -54,6 +54,9 @@ jobs:
         python3 ./scripts/lotus/fetch_settings.py
         cp ./scripts/lotus/backend.Dockerfile ./lotus/backend/Dockerfile
         cp ./scripts/lotus/backend_bootstrap.sh ./lotus/backend/scripts/bootstrap.sh
+        cp ./scripts/lotus/start_backend.prod.v1.sh ./lotus/backend/scripts/start_backend.prod.sh
+        cp ./scripts/lotus/start_consumer.v1.sh ./lotus/backend/scripts/start_consumer.sh
+
         cp ./scripts/lotus/backend_settings.v2.py ./lotus/backend/lotus/settings.py
         cp ./scripts/lotus/backend_urls.v2.py ./lotus/backend/lotus/urls.py
         
