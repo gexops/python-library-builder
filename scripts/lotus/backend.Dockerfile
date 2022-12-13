@@ -38,7 +38,7 @@ FROM build AS production
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     apt-get update && \
-    apt-get install -y postgresql-14 libpq-dev
+    apt-get install -y postgresql-14 libpq-dev netcat
 
 COPY ./scripts/start_backend.prod.sh ./scripts/start_backend.prod.sh
 RUN chmod +x ./scripts/start_backend.prod.sh
